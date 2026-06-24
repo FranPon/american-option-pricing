@@ -42,7 +42,7 @@ def ls_train(K, S0, N, train_set, discount_factors, basis_train, npaths_training
     value[-1,:] = intrinsic_value_train[-1,:] # Intrinsic value at time 0, discounted to time 0
     
     train_deg = np.zeros(N-1, dtype=int) # Actual degree used for regression at each time step
-    coefficients = np.empty((N-1, max_deg + 1)) 
+    coefficients = np.zeros((N-1, max_deg + 1)) 
     continuation_value = np.zeros(( N-1, npaths_training)) 
 
     itm_train = intrinsic_value_train > 0 # Indices of ITM paths at each time step, discounted to time 0
@@ -62,13 +62,16 @@ def ls_train(K, S0, N, train_set, discount_factors, basis_train, npaths_training
             Y_itm = value[t, itm] 
             vander_full = basis_train[t-1, :, :train_deg[t-1]+1]
             X_itm_vander = basis_train[t-1, itm , :train_deg[t-1]+1]
-            coefficients[t-1, :train_deg[t-1]+1], _, _, _ = np.linalg.lstsq(X_itm_vander, Y_itm, rcond=None) # Coefficients of the polynomial regression
-        
+            # Regression
+            coefficients[t-1, :train_deg[t-1]+1], _, _, _ = np.linalg.lstsq(X_itm_vander, Y_itm, rcond=None) 
             continuation_value[t-1,:] = vander_full @ coefficients[t-1, :train_deg[t-1]+1]
             # Determine the option value at time t
             exercise = (intrinsic_value_train[t,:] > continuation_value[t-1,:]) & (itm) # Exercise condition at time t
             # The option is early-exercised if the payoff is positive and greater than the continuation value!
-            value[t-1, : ] = np.where(exercise, intrinsic_value_train[t,:], value[t,:]) # If the option is exercised, the value is the payoff, otherwise it's the continuation value
+            value[t-1, : ] = np.where(exercise, intrinsic_value_train[t,:], value[t,:]) 
+            # If the option is exercised, the value is the payoff, otherwise it's the continuation value
+            # What we actually do in practice is to use the value at time t so that the approximation of the continuation
+            # value do not affect the value of the "subsequence" continuation value.
 
     return coefficients, continuation_value, value, train_deg
 
@@ -105,7 +108,7 @@ def lower_bound_ls(K, S0, T, dt, train_set, test_set, discount_factors, npaths_t
     # this into account: we need to do the average of the "antithetic values", hence this is wrong option_price = np.mean(exercise_payoff)
     antithetic_sum = (exercise_payoff[:npaths_pricing//2] + exercise_payoff[npaths_pricing//2:]) / 2
     option_price = np.mean(antithetic_sum)
-
+    #option_price = np.mean(exercise_payoff)
     immediate_exercise = max(0, K - S0) # Immediate exercise value at time 0
     option_price = max(option_price, immediate_exercise)
 
