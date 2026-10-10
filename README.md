@@ -16,7 +16,6 @@ The repository implements:
 | Herrera et al. extension | lower and upper bounds | payoff-augmented RaNN |
 | Alfonsi primal-dual | variance-reduced lower and dual upper bounds | local indicator, RaNN |
 
-Available multi-asset payoffs are max call, min put, arithmetic basket call or put, and geometric put. The included path simulator models independent geometric Brownian motions.
 
 ## Repository structure
 
@@ -44,10 +43,6 @@ python3 -m pip install -r requirements.txt
 
 Open `experiments_main.ipynb` and select the parameters in the two configuration cells: one for LSMC, Haugh-Kogan, and Herrera, and one for Alfonsi.  
 The notebook produces two detailed result tables and a compact combined comparison, each saved to CSV.
-
-## Outputs
-
-LSMC returns an estimated lower bound and its standard error. Haugh-Kogan functions return upper and lower estimates with their standard errors. Alfonsi functions return lower and upper estimates, their standard errors, and control-variate diagnostics.
 
 
 ## References
