@@ -26,7 +26,7 @@ The repository implements:
 ├── LSMC/                  # Longstaff--Schwartz estimators
 ├── activations.py         # Activations for random features
 ├── basis.py               # Polynomial, indicator, and random bases
-├── run_experiments.ipynb # Run numerical experiments
+├── run_experiments.ipynb  # Run numerical experiments
 ├── payoff.py              # Multi-asset payoff functions
 ├── simulation_paths.py    # Independent multi-asset GBM simulation
 ├── standardization_ridge.py
@@ -41,7 +41,7 @@ Install the dependencies from the repository root:
 python3 -m pip install -r requirements.txt
 ```
 
-Open `experiments_main.ipynb` and select the parameters in the two configuration cells: one for LSMC, Haugh-Kogan, and Herrera, and one for Alfonsi.  
+Open `run_experiments.ipynb` and select the parameters in the two configuration cells: one for LSMC, Haugh-Kogan, and Herrera, and one for Alfonsi.  
 The notebook produces two detailed result tables and a compact combined comparison, each saved to CSV.
 
 
